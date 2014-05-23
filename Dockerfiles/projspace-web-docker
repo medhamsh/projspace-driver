@@ -1,0 +1,19 @@
+FROM ubuntu
+MAINTAINER Medhamsh V. <medhamsh@axelerant.com>
+
+
+#Add repository
+RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main universe" > /etc/apt/sources.list
+RUN apt-get update
+
+#Install Apache, PHP, SSH, Supervisor
+RUN apt-get install -y apache2 php5 libapache2-mod-php5 php5-mysql openssh-server supervisor
+RUN mkdir -p /var/run/sshd
+RUN mkdir -p /var/log/supervisor
+
+#Add supervisord.conf file
+ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+#Expose ports and run supervisor
+EXPOSE 22 80
+CMD ["/usr/bin/supervisord"]
